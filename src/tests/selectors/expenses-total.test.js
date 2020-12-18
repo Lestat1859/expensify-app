@@ -18,3 +18,4 @@ test('should correctly add a single expense', () => {
     const result = selectExpenseTotal(expensesFixture);
     expect(result).toBe(expenses[0].amount+expenses[1].amount+expenses[2].amount);
   });
+  
