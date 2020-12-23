@@ -3,11 +3,12 @@ import thunk from 'redux-thunk';
 import { 
   startAddExpense, 
   addExpense, 
-  editExpense, 
+  editExpense,
+  startEditExpense, 
   removeExpense, 
+  startRemoveExpense,
   setExpenses, 
-  startSetExpenses, 
-  startRemoveExpense 
+  startSetExpenses
 } from '../../actions/expenses';
 import expenses from '../fixtures/expenses';
 import database from '../../firebase/firebase';
@@ -31,17 +32,17 @@ test('should setup remove expense action object', () => {
   });
 });
 
-test('should remove expense from firebase', (done) => {
+test('should remove expenses from firebase',(done)=>{
   const store = createMockStore({});
   const id = expenses[2].id;
-  store.dispatch(startRemoveExpense({ id })).then(() => {
+  store.dispatch(startRemoveExpense({id})).then(()=>{
     const actions = store.getActions();
     expect(actions[0]).toEqual({
       type: 'REMOVE_EXPENSE',
-      id
+      id 
     });
-    return database.ref(`expenses/${id}`).once('value');
-  }).then((snapshot) => {
+    return database.ref('expenses/'+id).once('value');    
+  }).then((snapshot)=>{
     expect(snapshot.val()).toBeFalsy();
     done();
   });
@@ -60,8 +61,28 @@ test('should setup edit expense action object', () => {
   });
 });
 
-test('should setup add expense action object with provided values', () => {
+test('should edit expense from firebase', (done)=> {
+  const store = createMockStore({});
+  const id = expenses[1].id
+  const updates = {
+    description: 'ExpenseModified'
+  };
+  store.dispatch(startEditExpense(id, updates)).then(()=>{
+    const actions = store.getActions();
+    expect(actions[0]).toEqual({
+      type: "EDIT_EXPENSE",
+      id,
+      updates
+    });
+    return database.ref('expenses/'+id).once('value');
+  }).then((snapshot)=> {
+    expect(snapshot.val().description).toBe('ExpenseModified');
+    done();
+  });
+});
 
+
+test('should setup add expense action object with provided values', () => {
   const action = addExpense(expenses[2]);
   expect(action).toEqual({
     type: 'ADD_EXPENSE',
