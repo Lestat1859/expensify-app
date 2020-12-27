@@ -1,20 +1,5 @@
-//1 Create ExpenseSummary Component
-
-// render by dashboardPage
-// Test with two snapshot tests
-// connect to the store for :
-//- expenseCount (how many visible expenses ?)
-// - expenseTotal (what's the total of the visible expense ?)
-
-// Example
-// Viewing 2 expenses totalling $94.34
-
-//Example
-// Viewing 1 expense totalling $94.34
-
-//2 Commit and deploy
-
 import React from 'react';
+import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
 import selectExpenseTotal from '../selectors/expenses-total';
 import selectExpenses from '../selectors/expenses';
@@ -22,8 +7,14 @@ import numeral from 'numeral';
 
 export const ExpensesSummary = ({expenseCount, expenseTotal})=>{
     return (
-    <div>
-        {expenseCount >0 ? <h2>Viewing {expenseCount} expense(s) totaling {expenseTotal}</h2> : '' }
+    <div className="page-header">
+        <div className ="content-container">
+            <h1 className ="page-header__title">Viewing <span>{expenseCount}</span> expenses totaling <span>{expenseTotal}</span></h1>
+            <div className = "page-header__actions">
+                <Link className="button" to ="/create"> Add Expense</Link>
+            </div>
+        </div>
+        
     </div>
     )
 }
